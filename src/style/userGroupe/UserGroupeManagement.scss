@@ -1,0 +1,110 @@
+@import '../variables';
+@import '../mixins';
+
+.groupeEditModal {
+  @include flex(center, center, row, nowrap);
+
+  .groupeEditModal__paper {
+    width: 40%;
+    height: 80%;
+    background-color: blue;
+    padding: 5px;
+    border-radius: 5px;
+    @include flex(center, center, column, nowrap);
+
+    .groupeEditModal__title {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      margin: 5px 0;
+      padding: 10px 5px;
+      background-color: blue;
+      z-index: 2;
+      @include flex(center, center, row);
+
+      h4 {
+        color: white;
+      }
+    }
+
+    .groupeEditModal__info {
+      width: 100%;
+      flex: 1;
+      padding: 15px;
+      border-radius: 5px 5px 0 0;
+      background-color: white;
+
+      .groupeEditModal__info__groupeName {
+        padding: 5px;
+        @include flex(flex-start, center);
+
+        h4 {
+          font-size: 0.9em;
+          margin-right: 20px;
+          text-align: left;
+        }
+
+        > div {
+          flex: 1;
+          .MuiOutlinedInput-input {
+            padding: 10px 4px;
+          }
+
+          .MuiInputLabel-outlined {
+            top: -5px;
+            font-size: 0.8em;
+          }
+        }
+      }
+
+      .groupeEditModal__info__groupeName {
+        padding: 5px;
+        overflow-y: auto;
+
+        svg {
+          font-size: 2em;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .groupeEditModal__buttons {
+      width: 100%;
+      position: sticky;
+      bottom: 0;
+      padding: 5px 0;
+      border-top: 1px solid gray;
+      background-color: white;
+      @include flex(center, center);
+
+      button {
+        margin: 0 5px;
+        padding: 5px 10px;
+
+        &:nth-child(1) {
+          span {
+            &:nth-child(1) {
+              svg {
+                font-size: 1.1em;
+                color: green;
+                margin: 0 5px;
+              }
+            }
+          }
+        }
+
+        &:nth-child(2) {
+          span {
+            &:nth-child(1) {
+              svg {
+                font-size: 1.1em;
+                color: red;
+                margin: 3px 5px 0 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

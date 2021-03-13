@@ -1,0 +1,71 @@
+@import '../variables';
+@import '../mixins';
+
+.userPageTable {
+  width: 100%;
+
+  div {
+    div {
+      table {
+        thead {
+          tr {
+            th {
+              min-width: 0px !important;
+              padding: 3px;
+              text-align: center;
+              font-weight: bold;
+              border-left: 1px solid #bbbbbb;
+
+              &:nth-child(1) {
+                border-left: none;
+              }
+
+              &:nth-child(9) {
+                border-left: none;
+              }
+
+              &:nth-child(10) {
+                border-left: none;
+              }
+            }
+          }
+        }
+
+        tbody {
+          tr {
+            td {
+              padding: 10px 5px;
+              text-align: left;
+              font-size: 0.8em;
+              border-left: 1px solid #dddddd;
+
+              &:nth-child(1) {
+                border-left: none;
+              }
+
+              &:nth-child(8),
+              &:nth-child(9),
+              &:nth-child(10) {
+                font-size: 1.2em;
+                padding: 0 7px;
+                text-align: center;
+                padding-top: 5px;
+                min-width: 35px;
+              }
+
+              &:nth-child(9) {
+                color: blue;
+                cursor: pointer;
+              }
+
+              &:nth-child(10) {
+                color: brown;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,73 @@
+@import '../variables';
+@import '../mixins';
+
+.UserGroupeTable {
+  width: 100%;
+  margin-top: 15px;
+
+  div {
+    div {
+      table {
+        thead {
+          tr {
+            th {
+              min-width: 0px !important;
+              padding: 3px;
+              text-align: center;
+              font-weight: bold;
+              border-left: 1px solid #bbbbbb;
+
+              &:nth-child(1) {
+                border-left: none;
+              }
+
+              &:nth-child(7) {
+                border-left: none;
+              }
+
+              &:nth-child(8) {
+                border-left: none;
+              }
+            }
+          }
+        }
+
+        tbody {
+          tr {
+            td {
+              max-width: 500px;
+              padding: 10px 5px;
+              text-align: left;
+              font-size: 0.8em;
+              border-left: 1px solid #dddddd;
+
+              &:nth-child(1) {
+                border-left: none;
+              }
+
+              &:nth-child(6),
+              &:nth-child(7),
+              &:nth-child(8) {
+                min-width: 35px;
+                font-size: 1.2em;
+                padding: 0 7px;
+                text-align: center;
+                padding-top: 5px;
+              }
+
+              &:nth-child(7) {
+                color: blue;
+                cursor: pointer;
+              }
+
+              &:nth-child(8) {
+                color: brown;
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

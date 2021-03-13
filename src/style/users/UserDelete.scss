@@ -1,0 +1,89 @@
+@import '../variables';
+@import '../mixins';
+
+.deleteModal {
+  @include flex(center, center, row, nowrap);
+
+  .deleteModal__paper {
+    width: 40%;
+    height: 30%;
+    background-color: blue;
+    padding: 5px;
+    border-radius: 5px;
+    @include flex(center, center, column, nowrap);
+
+    .deleteModal__title {
+      width: 100%;
+      position: sticky;
+      top: 0;
+      margin: 3px 0;
+      padding: 3px;
+      background-color: blue;
+      @include flex(center, center, row);
+
+      h4 {
+        color: white;
+        padding: 3px;
+      }
+    }
+
+    .deleteModal__info {
+      width: 100%;
+      flex: 1;
+      padding: 10px 5px;
+      border-radius: 5px 5px 0 0;
+      background-color: white;
+      @include flex(center, center, row);
+
+      svg {
+        font-size: 3em;
+        margin: 10px;
+      }
+
+      p {
+        font-size: 0.9em;
+        line-height: 1.3em;
+        text-align: center;
+      }
+    }
+
+    .deleteModal__buttons {
+      width: 100%;
+      position: sticky;
+      bottom: 0;
+      padding: 5px 0;
+      border-top: 1px solid gray;
+      background-color: white;
+      @include flex(center, center);
+
+      button {
+        margin: 0 5px;
+        padding: 5px 10px;
+
+        &:nth-child(1) {
+          span {
+            &:nth-child(1) {
+              svg {
+                font-size: 1.1em;
+                color: green;
+                margin: 0 5px;
+              }
+            }
+          }
+        }
+
+        &:nth-child(2) {
+          span {
+            &:nth-child(1) {
+              svg {
+                font-size: 1.1em;
+                color: red;
+                margin: 3px 5px 0 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

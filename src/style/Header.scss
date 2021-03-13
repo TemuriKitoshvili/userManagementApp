@@ -1,0 +1,60 @@
+@import './variables';
+@import './mixins';
+
+.header {
+  background-color: #0252dc;
+  padding: 5px 10px 5px 10px;
+  @include flex(space-between, center);
+
+  .menu__nav {
+    margin: 2px;
+
+    button {
+      vertical-align: middle;
+
+      span {
+        &:nth-child(1) {
+          text-transform: capitalize;
+
+          svg {
+            font-size: 1.1em;
+            margin: 0 4px;
+          }
+        }
+      }
+    }
+  }
+
+  .menu__userAuthorization {
+    margin: 0 5px;
+    @include flex(space-between, center);
+
+    h4 {
+      font-size: 1em;
+      text-transform: capitalize;
+      padding: 0 15px;
+    }
+
+    button {
+      font-size: 1em;
+      text-transform: capitalize;
+      padding: 5px 10px;
+
+      span {
+        &:nth-child(1) {
+          svg {
+            font-size: 1em;
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.menu__navigation__item {
+  svg {
+    margin-right: 7px;
+    font-size: 1em;
+  }
+}

@@ -1,0 +1,42 @@
+@import '../variables';
+@import '../mixins';
+
+.userGroupePageFilter {
+  width: 100%;
+  @include flex($align: center, $wrap: wrap);
+
+  div {
+    margin-right: 3px;
+
+    &.userGroupePageFilter__name,
+    &.userGroupePageFilter__permission,
+    &.userGroupePageFilter__status {
+      width: 160px !important;
+
+      div {
+        .MuiOutlinedInput-input {
+          padding: 10px 4px;
+        }
+      }
+
+      .MuiInputLabel-outlined {
+        top: -5px;
+        font-size: 0.8em;
+      }
+    }
+  }
+
+  button {
+    margin-left: 5px;
+
+    span {
+      &:nth-child(1) {
+        svg {
+          font-size: 1em;
+          margin: 0 5px;
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+}

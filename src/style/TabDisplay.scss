@@ -1,0 +1,20 @@
+@import './variables';
+@import './mixins';
+
+.tabDisplay {
+  width: 100%;
+  height: calc(100vh - 100px);
+  padding: 15px 5px;
+  @include flex(space-evenly, center, column);
+
+  h3 {
+    font-size: 1.2em;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: #6c63ff;
+  }
+
+  img {
+    width: 400px;
+  }
+}
