@@ -1,9 +1,14 @@
 import { useState } from 'react';
 import '../../style/users/UsersPageTable.scss';
+// configs
+import axios from '../configs/axios';
+import noty from '../configs/noty';
 // components
+import UserManagement from './UserManagement';
+import UserDelete from './UserDelete';
 // material-ui
-import { makeStyles } from '@material-ui/core/styles';
 import {
+  makeStyles,
   Paper,
   Table,
   TableBody,
@@ -64,32 +69,66 @@ const columns = [
   },
 ];
 
-const rows = [
-  {
-    id: 1,
-    username: 'temuri',
-    fullName: 'temuri kitoshvili',
-    email: 'temuri.kitoshvili@gmail.com',
-    userGroups: ['pirveli jgufi', 'meore jgufi'],
-    createTime: '01/12/2021',
-    lastUpdateTime: '02/03/2021',
-    active: true,
-  },
-];
-
-const UsersPageTable = ({ users, setOpenEditModal, setOpenDeleteModal }) => {
+const UsersPageTable = ({
+  users,
+  openEditModal,
+  setOpenEditModal,
+  openDeleteModal,
+  setOpenDeleteModal,
+  saveOrEdit,
+  setSaveOrEdit,
+  reload,
+  setReload,
+}) => {
   const classes = useStyles();
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  // userManagement states
+  const [userUsername, setUserUsername] = useState('');
+  const [userFullName, setUserFullName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [userConfirmPassword, setUserConfirmPassword] = useState('');
+  const [userGroups, setUserGroups] = useState([]);
+  const [userId, setUserId] = useState('');
+  const [userIdForDelete, setUserIdForDelete] = useState('');
 
-  // const handleChangePage = (e, newPage) => {
-  //   setPage(newPage);
-  // };
+  // console.log('userUsername', userUsername);
+  // console.log('userFullName', userFullName);
+  // console.log('userEmail', userEmail);
+  // console.log('userPassword', userPassword);
+  // console.log('userConfirmPassword', userConfirmPassword);
+  // console.log('userGroups', userGroups);
 
-  // const handleChangeRowsPerPage = (e) => {
-  //   setRowsPerPage(+e.target.value);
-  //   setPage(0);
-  // };
+  const handleUserEdit = (id) => {
+    setOpenEditModal(true);
+    setSaveOrEdit('edit');
+    if (id) {
+      setUserId(id);
+
+      axios
+        .get(`users/${id}`)
+        .then((res) => {
+          setUserUsername(res.data.username);
+          setUserFullName(res.data.fullName);
+          setUserEmail(res.data.email);
+          setUserGroups(res.data.userGroups);
+        })
+        .catch((err) =>
+          noty(
+            'მომხმარებლის შესახებ ინფორმაციის ჩატვირთვისას დაფიქსირდა შეცდომა',
+            'error'
+          )
+        );
+    }
+  };
+
+  const handleUserDelete = (id) => {
+    setOpenDeleteModal(true);
+    if (id) {
+      setUserIdForDelete(id);
+    }
+  };
 
   return (
     <div className='userPageTable'>
@@ -143,13 +182,13 @@ const UsersPageTable = ({ users, setOpenEditModal, setOpenDeleteModal }) => {
 
                             {column?.id === 'edit' && (
                               <FaUserEdit
-                                onClick={() => setOpenEditModal(true)}
+                                onClick={() => handleUserEdit(row.id)}
                               />
                             )}
 
                             {column?.id === 'delete' && (
                               <MdDeleteSweep
-                                onClick={() => setOpenDeleteModal(true)}
+                                onClick={() => handleUserDelete(row.id)}
                               />
                             )}
                           </TableCell>
@@ -175,6 +214,37 @@ const UsersPageTable = ({ users, setOpenEditModal, setOpenDeleteModal }) => {
           }}
         />
       </Paper>
+
+      {/* modals */}
+      <UserManagement
+        openEditModal={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+        // stateControls
+        userUsername={userUsername}
+        setUserUsername={setUserUsername}
+        userFullName={userFullName}
+        setUserFullName={setUserFullName}
+        userEmail={userEmail}
+        setUserEmail={setUserEmail}
+        userPassword={userPassword}
+        setUserPassword={setUserPassword}
+        userConfirmPassword={userConfirmPassword}
+        setUserConfirmPassword={setUserConfirmPassword}
+        userGroups={userGroups}
+        setUserGroups={setUserGroups}
+        userId={userId}
+        saveOrEdit={saveOrEdit}
+        reload={reload}
+        setReload={setReload}
+      />
+
+      <UserDelete
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}
+        userIdForDelete={userIdForDelete}
+        reload={reload}
+        setReload={setReload}
+      />
     </div>
   );
 };

@@ -5,7 +5,7 @@ import UserGroupPage from './userGroupe/UserGroupPage';
 // media
 import team from '../img/team.svg';
 
-const TabDisplay = ({ activeTab }) => {
+const TabDisplay = ({ activeTab, reload, setReload }) => {
   return (
     <div className='tabDisplay'>
       {!activeTab && (
@@ -15,8 +15,12 @@ const TabDisplay = ({ activeTab }) => {
         </>
       )}
 
-      {activeTab === 'მომხმარებლები' && <UsersPage />}
-      {activeTab === 'მომხმარებლის ჯგუფები' && <UserGroupPage />}
+      {activeTab === 'მომხმარებლები' && (
+        <UsersPage reload={reload} setReload={setReload} />
+      )}
+      {activeTab === 'მომხმარებლის ჯგუფები' && (
+        <UserGroupPage reload={reload} setReload={setReload} />
+      )}
     </div>
   );
 };

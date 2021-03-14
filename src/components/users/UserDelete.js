@@ -1,10 +1,39 @@
 import '../../style/users/UserDelete.scss';
+// configs
+import axios from '../configs/axios';
+import noty from '../configs/noty';
 // material-ui
 import { Backdrop, Button, Fade, Modal } from '@material-ui/core';
 // icons
 import { FcInfo } from 'react-icons/fc';
 
-const UserDelete = ({ openDeleteModal, setOpenDeleteModal }) => {
+const UserDelete = ({
+  openDeleteModal,
+  setOpenDeleteModal,
+  userIdForDelete,
+  reload,
+  setReload,
+}) => {
+  const handleUserDelete = () => {
+    if (userIdForDelete) {
+      setOpenDeleteModal(false);
+
+      axios
+        .delete(`users/${userIdForDelete}`)
+        .then((res) => {
+          setReload(!reload);
+          noty('მომხმარებელი წარმატებით წაიშალა', 'info');
+        })
+        .catch((err) =>
+          noty('მომხმარებლის წაშლისას დაფიქსირდა შეცდომა', 'error')
+        );
+    }
+  };
+
+  const handleUserDeleteClose = () => {
+    setOpenDeleteModal(false);
+  };
+
   return (
     <div className='userDelete'>
       <Modal
@@ -12,7 +41,7 @@ const UserDelete = ({ openDeleteModal, setOpenDeleteModal }) => {
         aria-describedby='transition-modal-description'
         className='deleteModal'
         open={openDeleteModal}
-        onClose={() => setOpenDeleteModal(false)}
+        onClose={handleUserDeleteClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -29,8 +58,12 @@ const UserDelete = ({ openDeleteModal, setOpenDeleteModal }) => {
               <p>დარწმუნებული ხართ, რომ გსურთ მომხმარებლის წაშლა?</p>
             </div>
             <div className='deleteModal__buttons'>
-              <Button variant='contained'>კი</Button>
-              <Button variant='contained'>არა</Button>
+              <Button variant='contained' onClick={handleUserDelete}>
+                კი
+              </Button>
+              <Button variant='contained' onClick={handleUserDeleteClose}>
+                არა
+              </Button>
             </div>
           </div>
         </Fade>

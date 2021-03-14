@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import '../../style/userGroupe/UserGroupPage.scss';
 // configs
 import axios from '../configs/axios';
@@ -7,17 +6,12 @@ import noty from '../configs/noty';
 // components
 import UserGroupePageFilter from './UserGroupePageFilter';
 import UserGroupeTable from './UserGroupeTable';
-import UserGroupeManagement from './UserGroupeManagement';
-import UserGroupeDelete from './UserGroupeDelete';
 
-const UserGroupPage = () => {
-  const userGroups = useSelector((state) => state.APIData.userGroups);
+const UserGroupPage = ({ reload, setReload }) => {
   // filter
   const [permissions, setPermissions] = useState([]);
-  // filterValues
-  const [name, setName] = useState('');
-  const [permission, setPermission] = useState('');
-  const [active, setActive] = useState('');
+  const [filterUserGroupData, setFilterUserGroupData] = useState([]);
+  const [saveOrEdit, setSaveOrEdit] = useState(null);
   // modals
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openGroupeDeleteModal, setOpenGroupeDeleteModal] = useState(false);
@@ -39,31 +33,24 @@ const UserGroupPage = () => {
       <UserGroupePageFilter
         permissions={permissions}
         setOpenEditModal={setOpenEditModal}
-        name={name}
-        setName={setName}
-        permission={permission}
-        setPermission={setPermission}
-        active={active}
-        setActive={setActive}
+        setFilterUserGroupData={setFilterUserGroupData}
+        setSaveOrEdit={setSaveOrEdit}
       />
 
       <div className='userGroupPage__info'>
         <UserGroupeTable
-          userGroups={userGroups}
+          userGroups={filterUserGroupData}
+          permissions={permissions}
+          openEditModal={openEditModal}
           setOpenEditModal={setOpenEditModal}
+          openGroupeDeleteModal={openGroupeDeleteModal}
           setOpenGroupeDeleteModal={setOpenGroupeDeleteModal}
+          reload={reload}
+          setReload={setReload}
+          saveOrEdit={saveOrEdit}
+          setSaveOrEdit={setSaveOrEdit}
         />
       </div>
-
-      {/* modals */}
-      <UserGroupeManagement
-        openEditModal={openEditModal}
-        setOpenEditModal={setOpenEditModal}
-      />
-      <UserGroupeDelete
-        openGroupeDeleteModal={openGroupeDeleteModal}
-        setOpenGroupeDeleteModal={setOpenGroupeDeleteModal}
-      />
     </div>
   );
 };

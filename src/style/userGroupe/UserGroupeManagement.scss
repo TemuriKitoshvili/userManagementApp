@@ -34,14 +34,17 @@
       border-radius: 5px 5px 0 0;
       background-color: white;
 
-      .groupeEditModal__info__groupeName {
+      .groupeEditModal__info__groupeName,
+      .groupeEditModal__info__status {
         padding: 5px;
+        margin-bottom: 5px;
         @include flex(flex-start, center);
 
         h4 {
           font-size: 0.9em;
           margin-right: 20px;
           text-align: left;
+          width: 20%;
         }
 
         > div {
@@ -57,9 +60,24 @@
         }
       }
 
-      .groupeEditModal__info__groupeName {
-        padding: 5px;
+      .groupeEditModal__info__checkBox {
+        padding: 0 5px 5px 5px;
         overflow-y: auto;
+
+        h4 {
+          position: sticky;
+          top: 0;
+          background-color: white;
+          font-size: 0.9em;
+          margin-right: 20px;
+          margin-bottom: 10px;
+          text-align: left;
+          width: 100%;
+        }
+
+        > div {
+          max-height: 230px;
+        }
 
         svg {
           font-size: 2em;

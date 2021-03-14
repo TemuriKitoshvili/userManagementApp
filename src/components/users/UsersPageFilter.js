@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import '../../style/users/UsersPageFilter.scss';
 // material-ui
 import {
@@ -8,28 +10,56 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 // icons
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BiEraser } from 'react-icons/bi';
 
 const UsersPageFilter = ({
-  userGroups,
+  userGroupsForSelection,
   setOpenEditModal,
-  username,
-  setUsername,
-  fullname,
-  setFullname,
-  email,
-  setEmail,
-  group,
-  setGroup,
-  active,
-  setActive,
+  setFilterUsersData,
+  setSaveOrEdit,
 }) => {
+  const users = useSelector((state) => state.APIData.users);
+  // filterValues
+  const [username, setUsername] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [group, setGroup] = useState('');
+  const [active, setActive] = useState('');
+
+  useEffect(() => {
+    handleFilterUsersData();
+  }, [username, fullName, email, group, active, users]);
+
+  const handleFilterUsersData = () => {
+    if (!username && !fullName && !email && !group && !active) {
+      return setFilterUsersData(users);
+    }
+
+    setFilterUsersData(
+      users?.filter(
+        (user) =>
+          (username && username === user.username) ||
+          (fullName && fullName === user.fullName) ||
+          (email && email === user.email) ||
+          (group &&
+            user['userGroups']?.filter(
+              (userGroup) => group === userGroup?.name
+            )) ||
+          (active === 'აქტიური' ? user.active === true : user.active === false)
+      )
+    );
+  };
+
+  const handleAddUser = () => {
+    setSaveOrEdit('save');
+    setOpenEditModal(true);
+  };
+
   const handleCleaning = () => {
     setUsername('');
-    setFullname('');
+    setFullName('');
     setEmail('');
     setGroup('');
     setActive('');
@@ -48,8 +78,8 @@ const UsersPageFilter = ({
         className='userPageFilter__fullname'
         label='მომხმარებელის სახელი'
         variant='outlined'
-        value={fullname}
-        onChange={(e) => setFullname(e.target.value)}
+        value={fullName}
+        onChange={(e) => setFullName(e.target.value)}
       />
       <TextField
         className='userPageFilter__email'
@@ -68,14 +98,16 @@ const UsersPageFilter = ({
           onChange={(e) => setGroup(e.target.value)}
           label='Age'
         >
-          {userGroups?.map((group) => (
-            <MenuItem value={group.name}>{group.name}</MenuItem>
+          {userGroupsForSelection?.map((group) => (
+            <MenuItem key={group.name} value={group.name}>
+              {group.name}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
 
       <FormControl className='userPageFilter__status' variant='outlined'>
-        <InputLabel id='demo-simple-select-outlined-label'>ჯგუფები</InputLabel>
+        <InputLabel id='demo-simple-select-outlined-label'>სტატუსი</InputLabel>
         <Select
           labelId='demo-simple-select-outlined-label'
           id='demo-simple-select-outlined'
@@ -83,8 +115,12 @@ const UsersPageFilter = ({
           onChange={(e) => setActive(e.target.value)}
           label='Age'
         >
-          <MenuItem value={'აქტიური'}>{'აქტიური'}</MenuItem>
-          <MenuItem value={'არააქტიური'}>{'არააქტიური'}</MenuItem>
+          <MenuItem key={'აქტიური'} value='აქტიური'>
+            აქტიური
+          </MenuItem>
+          <MenuItem key={'არააქტიური'} value='არააქტიური'>
+            არააქტიური
+          </MenuItem>
         </Select>
       </FormControl>
 
@@ -92,7 +128,7 @@ const UsersPageFilter = ({
         <BiEraser /> გასუფთავება
       </Button>
 
-      <Button variant='contained' onClick={() => setOpenEditModal(true)}>
+      <Button variant='contained' onClick={handleAddUser}>
         <AiOutlinePlus /> დამატება
       </Button>
     </div>

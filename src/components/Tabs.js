@@ -20,6 +20,7 @@ const Tabs = () => {
   const tabs = useSelector((state) => state.tabs);
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('');
+  const [reload, setReload] = useState(false);
 
   useEffect(() => {
     axios
@@ -32,7 +33,9 @@ const Tabs = () => {
       .catch((err) =>
         noty('ინფორმაციის ჩატვირთვისას დაფიქსირდა შეცდომა', 'error')
       );
+  }, [tabs, reload]);
 
+  useEffect(() => {
     setActiveTab(tabs[tabs.length - 1]);
   }, [tabs]);
 
@@ -60,7 +63,11 @@ const Tabs = () => {
       </div>
 
       <div className='tabs__display'>
-        <TabDisplay activeTab={activeTab} />
+        <TabDisplay
+          activeTab={activeTab}
+          reload={reload}
+          setReload={setReload}
+        />
       </div>
     </div>
   );

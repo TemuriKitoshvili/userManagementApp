@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import '../../style/userGroupe/UserGroupePageFilter.scss';
 // material-ui
 import {
@@ -8,7 +10,6 @@ import {
   Select,
   TextField,
 } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
 // icons
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BiEraser } from 'react-icons/bi';
@@ -16,13 +17,41 @@ import { BiEraser } from 'react-icons/bi';
 const UserGroupePageFilter = ({
   permissions,
   setOpenEditModal,
-  name,
-  setName,
-  permission,
-  setPermission,
-  active,
-  setActive,
+  setFilterUserGroupData,
+  setSaveOrEdit,
 }) => {
+  const userGroups = useSelector((state) => state.APIData.userGroups);
+  // filterValues
+  const [name, setName] = useState('');
+  const [permission, setPermission] = useState('');
+  const [active, setActive] = useState('');
+
+  useEffect(() => {
+    handleFilterUserGroupData();
+  }, [name, permission, active, userGroups]);
+
+  const handleFilterUserGroupData = () => {
+    if (!name && !permission && !active) {
+      return setFilterUserGroupData(userGroups);
+    }
+
+    setFilterUserGroupData(
+      userGroups?.filter(
+        (group) =>
+          (name && name === group.name) ||
+          (permission && group['userPermissionCodes'].includes(permission)) ||
+          (active === 'აქტიური'
+            ? group.active === true
+            : group.active === false)
+      )
+    );
+  };
+
+  const handleAddUserGroup = () => {
+    setOpenEditModal(true);
+    setSaveOrEdit('save');
+  };
+
   const handleCleaning = () => {
     setName('');
     setPermission('');
@@ -43,7 +72,7 @@ const UserGroupePageFilter = ({
         className='userGroupePageFilter__permission'
         variant='outlined'
       >
-        <InputLabel id='demo-simple-select-outlined-label'>ჯგუფები</InputLabel>
+        <InputLabel id='demo-simple-select-outlined-label'>უფლებები</InputLabel>
         <Select
           labelId='demo-simple-select-outlined-label'
           id='demo-simple-select-outlined'
@@ -52,13 +81,15 @@ const UserGroupePageFilter = ({
           label='permissions'
         >
           {permissions?.map((permission) => (
-            <MenuItem value={permission.name}>{permission.name}</MenuItem>
+            <MenuItem key={permission.code} value={permission.code}>
+              {permission.code}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
 
       <FormControl className='userGroupePageFilter__status' variant='outlined'>
-        <InputLabel id='demo-simple-select-outlined-label'>ჯგუფები</InputLabel>
+        <InputLabel id='demo-simple-select-outlined-label'>სტატუსი</InputLabel>
         <Select
           labelId='demo-simple-select-outlined-label'
           id='demo-simple-select-outlined'
@@ -66,8 +97,12 @@ const UserGroupePageFilter = ({
           onChange={(e) => setActive(e.target.value)}
           label='status'
         >
-          <MenuItem value={'აქტიური'}>{'აქტიური'}</MenuItem>
-          <MenuItem value={'არააქტიური'}>{'არააქტიური'}</MenuItem>
+          <MenuItem key={'აქტიური'} value='აქტიური'>
+            {'აქტიური'}
+          </MenuItem>
+          <MenuItem key={'არააქტიური'} value='არააქტიური'>
+            {'არააქტიური'}
+          </MenuItem>
         </Select>
       </FormControl>
 
@@ -75,7 +110,7 @@ const UserGroupePageFilter = ({
         <BiEraser /> გასუფთავება
       </Button>
 
-      <Button variant='contained' onClick={() => setOpenEditModal(true)}>
+      <Button variant='contained' onClick={handleAddUserGroup}>
         <AiOutlinePlus /> დამატება
       </Button>
     </div>

@@ -1,4 +1,11 @@
+import { useState } from 'react';
 import '../../style/userGroupe/UserGroupeTable.scss';
+// configs
+import axios from '../configs/axios';
+import noty from '../configs/noty';
+// components
+import UserGroupeManagement from './UserGroupeManagement';
+import UserGroupeDelete from './UserGroupeDelete';
 // material-ui
 import {
   makeStyles,
@@ -51,23 +58,53 @@ const columns = [
   },
 ];
 
-const rows = [
-  {
-    id: 1,
-    name: 'ჯგუფი 1',
-    userPermissionCodes: ['pirveli jgufi', 'meore jgufi'],
-    createTime: '01/12/2021',
-    lastUpdateTime: '02/03/2021',
-    active: true,
-  },
-];
-
 const UserGroupeTable = ({
   userGroups,
+  permissions,
+  openEditModal,
   setOpenEditModal,
+  openGroupeDeleteModal,
   setOpenGroupeDeleteModal,
+  reload,
+  setReload,
+  saveOrEdit,
+  setSaveOrEdit,
 }) => {
   const classes = useStyles();
+  const [name, setName] = useState('');
+  const [status, setStatus] = useState('');
+  const [permissionCodes, setPermissionCodes] = useState([]);
+  const [userGroupId, setUserGroupId] = useState(null);
+  const [userGroupIdForDelete, setUserGroupIdForDelete] = useState(null);
+
+  const handleUserGroupEdit = (id) => {
+    setOpenEditModal(true);
+    setSaveOrEdit('edit');
+
+    if (id) {
+      setUserGroupId(id);
+      axios
+        .get(`userGroups/${id}`)
+        .then((res) => {
+          setName(res.data.name);
+          setStatus(res.data.active);
+          setPermissionCodes(res.data.userPermissionCodes);
+        })
+        .catch((err) =>
+          noty(
+            'მომხმარებლის ჯგუფის მონაცემების ჩატვირთვისას დაფიქსირდა შეცდომა',
+            'error'
+          )
+        );
+    }
+  };
+
+  const handleUserGroupDelete = (id) => {
+    setOpenGroupeDeleteModal(true);
+    if (id) {
+      setUserGroupIdForDelete(id);
+    }
+  };
 
   return (
     <div className='UserGroupeTable'>
@@ -117,13 +154,13 @@ const UserGroupeTable = ({
 
                           {column.id === 'edit' && (
                             <FaUserEdit
-                              onClick={() => setOpenEditModal(true)}
+                              onClick={() => handleUserGroupEdit(row.id)}
                             />
                           )}
 
                           {column.id === 'delete' && (
                             <MdDeleteSweep
-                              onClick={() => setOpenGroupeDeleteModal(true)}
+                              onClick={() => handleUserGroupDelete(row.id)}
                             />
                           )}
                         </TableCell>
@@ -136,6 +173,31 @@ const UserGroupeTable = ({
           </Table>
         </TableContainer>
       </Paper>
+
+      {/* modals */}
+      <UserGroupeManagement
+        openEditModal={openEditModal}
+        setOpenEditModal={setOpenEditModal}
+        permissions={permissions}
+        name={name}
+        setName={setName}
+        status={status}
+        setStatus={setStatus}
+        permissionCodes={permissionCodes}
+        setPermissionCodes={setPermissionCodes}
+        userGroupId={userGroupId}
+        reload={reload}
+        setReload={setReload}
+        saveOrEdit={saveOrEdit}
+      />
+
+      <UserGroupeDelete
+        openGroupeDeleteModal={openGroupeDeleteModal}
+        setOpenGroupeDeleteModal={setOpenGroupeDeleteModal}
+        userGroupIdForDelete={userGroupIdForDelete}
+        reload={reload}
+        setReload={setReload}
+      />
     </div>
   );
 };

@@ -1,4 +1,7 @@
 import '../../style/userGroupe/UserGroupeDelete.scss';
+// configs
+import axios from '../configs/axios';
+import noty from '../configs/noty';
 // material-ui
 import { Backdrop, Button, Fade, Modal } from '@material-ui/core';
 // icons
@@ -7,7 +10,30 @@ import { FcInfo } from 'react-icons/fc';
 const UserGroupeDelete = ({
   openGroupeDeleteModal,
   setOpenGroupeDeleteModal,
+  userGroupIdForDelete,
+  reload,
+  setReload,
 }) => {
+  const handleUserGroupDelete = () => {
+    if (userGroupIdForDelete) {
+      setOpenGroupeDeleteModal(false);
+
+      axios
+        .delete(`userGroups/${userGroupIdForDelete}`)
+        .then((res) => {
+          setReload(!reload);
+          noty('მომხმარებელის ჯგუფი წარმატებით წაიშალა', 'info');
+        })
+        .catch((err) =>
+          noty('მომხმარებლის ჯგუფის წაშლისას დაფიქსირდა შეცდომა', 'error')
+        );
+    }
+  };
+
+  const handleUserGroupDeleteClose = () => {
+    setOpenGroupeDeleteModal(false);
+  };
+
   return (
     <div className='userGroupeDelete'>
       <Modal
@@ -15,7 +41,7 @@ const UserGroupeDelete = ({
         aria-describedby='transition-modal-description'
         className='userGroupeDelete'
         open={openGroupeDeleteModal}
-        onClose={() => setOpenGroupeDeleteModal(false)}
+        onClose={handleUserGroupDeleteClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -32,8 +58,12 @@ const UserGroupeDelete = ({
               <p>დარწმუნებული ხართ, რომ გსურთ მომხმარებლის ჯგუფის წაშლა?</p>
             </div>
             <div className='userGroupeDelete__buttons'>
-              <Button variant='contained'>კი</Button>
-              <Button variant='contained'>არა</Button>
+              <Button variant='contained' onClick={handleUserGroupDelete}>
+                კი
+              </Button>
+              <Button variant='contained' onClick={handleUserGroupDeleteClose}>
+                არა
+              </Button>
             </div>
           </div>
         </Fade>
