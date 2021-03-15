@@ -1,4 +1,7 @@
-import '../../style/userGroupe/UserGroupeDelete.scss';
+import '../../style/userGroup/UserGroupDelete.scss';
+// store
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshTable } from '../redux/actions/actionCreators';
 // configs
 import axios from '../configs/axios';
 import noty from '../configs/noty';
@@ -7,21 +10,23 @@ import { Backdrop, Button, Fade, Modal } from '@material-ui/core';
 // icons
 import { FcInfo } from 'react-icons/fc';
 
-const UserGroupeDelete = ({
-  openGroupeDeleteModal,
-  setOpenGroupeDeleteModal,
+const UserGroupDelete = ({
+  openGroupDeleteModal,
+  setOpenGroupDeleteModal,
   userGroupIdForDelete,
-  reload,
-  setReload,
 }) => {
+  const refresh = useSelector((state) => state.refresh);
+  const dispatch = useDispatch();
+
+  // Takes a specific user's id and removes it
   const handleUserGroupDelete = () => {
     if (userGroupIdForDelete) {
-      setOpenGroupeDeleteModal(false);
+      setOpenGroupDeleteModal(false);
 
       axios
         .delete(`userGroups/${userGroupIdForDelete}`)
         .then((res) => {
-          setReload(!reload);
+          dispatch(refreshTable(!refresh));
           noty('მომხმარებელის ჯგუფი წარმატებით წაიშალა', 'info');
         })
         .catch((err) =>
@@ -31,16 +36,16 @@ const UserGroupeDelete = ({
   };
 
   const handleUserGroupDeleteClose = () => {
-    setOpenGroupeDeleteModal(false);
+    setOpenGroupDeleteModal(false);
   };
 
   return (
-    <div className='userGroupeDelete'>
+    <div className='userGroupDelete'>
       <Modal
         aria-labelledby='transition-modal-title'
         aria-describedby='transition-modal-description'
-        className='userGroupeDelete'
-        open={openGroupeDeleteModal}
+        className='userGroupDelete'
+        open={openGroupDeleteModal}
         onClose={handleUserGroupDeleteClose}
         closeAfterTransition
         BackdropComponent={Backdrop}
@@ -48,16 +53,16 @@ const UserGroupeDelete = ({
           timeout: 500,
         }}
       >
-        <Fade in={openGroupeDeleteModal}>
-          <div className='userGroupeDelete__paper'>
-            <div className='userGroupeDelete__title'>
+        <Fade in={openGroupDeleteModal}>
+          <div className='userGroupDelete__paper'>
+            <div className='userGroupDelete__title'>
               <h4>დადასტურება</h4>
             </div>
-            <div className='userGroupeDelete__info'>
+            <div className='userGroupDelete__info'>
               <FcInfo />
               <p>დარწმუნებული ხართ, რომ გსურთ მომხმარებლის ჯგუფის წაშლა?</p>
             </div>
-            <div className='userGroupeDelete__buttons'>
+            <div className='userGroupDelete__buttons'>
               <Button variant='contained' onClick={handleUserGroupDelete}>
                 კი
               </Button>
@@ -72,4 +77,4 @@ const UserGroupeDelete = ({
   );
 };
 
-export default UserGroupeDelete;
+export default UserGroupDelete;

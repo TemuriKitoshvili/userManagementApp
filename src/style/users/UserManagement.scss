@@ -60,20 +60,26 @@
 
       #simple-tabpanel-1 {
         > div {
-          padding: 0px;
+          padding: 15px 0;
 
           > div {
-            @include flex(flex-start, flex-start, column);
 
-            label {
+            ol{
               width: 100%;
-              margin: 0;
+              li{
+                padding: 2px 0;
 
-              &:nth-child(1) {
-                border-bottom: 1px solid rgb(199, 199, 199);
-                background-color: rgb(221, 217, 217);
+                >span {
+                  &:nth-child(1){
+                    padding-bottom: 5px;
+                  }
+                }
               }
             }
+          }
+
+          svg{
+            width: 20px;
           }
         }
       }

@@ -1,4 +1,7 @@
 import '../../style/users/UserDelete.scss';
+// store
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshTable } from '../redux/actions/actionCreators';
 // configs
 import axios from '../configs/axios';
 import noty from '../configs/noty';
@@ -11,22 +14,24 @@ const UserDelete = ({
   openDeleteModal,
   setOpenDeleteModal,
   userIdForDelete,
-  reload,
-  setReload,
 }) => {
+  const refresh = useSelector((state) => state.refresh);
+  const dispatch = useDispatch();
+
+  // Takes a specific user's id and removes it
   const handleUserDelete = () => {
     if (userIdForDelete) {
-      setOpenDeleteModal(false);
-
       axios
         .delete(`users/${userIdForDelete}`)
         .then((res) => {
-          setReload(!reload);
           noty('მომხმარებელი წარმატებით წაიშალა', 'info');
+          dispatch(refreshTable(!refresh));
         })
-        .catch((err) =>
-          noty('მომხმარებლის წაშლისას დაფიქსირდა შეცდომა', 'error')
-        );
+        .catch((err) => {
+          noty('მომხმარებლის წაშლისას დაფიქსირდა შეცდომა', 'error');
+        });
+
+      setOpenDeleteModal(false);
     }
   };
 

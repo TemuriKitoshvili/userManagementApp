@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import '../style/Tabs.scss';
 // configs
 import axios from './configs/axios';
 import noty from './configs/noty';
 // store
+import { useDispatch, useSelector } from 'react-redux';
 import {
   addUsers,
   removeTab,
@@ -18,10 +18,11 @@ import { IoCloseSharp } from 'react-icons/io5';
 
 const Tabs = () => {
   const tabs = useSelector((state) => state.tabs);
+  const refresh = useSelector((state) => state.refresh);
   const dispatch = useDispatch();
   const [activeTab, setActiveTab] = useState('');
-  const [reload, setReload] = useState(false);
 
+  // Determines which tab is open and receives its corresponding data from the server
   useEffect(() => {
     axios
       .get(tabs[tabs.length - 1] === 'მომხმარებლები' ? '/users' : '/userGroups')
@@ -33,12 +34,14 @@ const Tabs = () => {
       .catch((err) =>
         noty('ინფორმაციის ჩატვირთვისას დაფიქსირდა შეცდომა', 'error')
       );
-  }, [tabs, reload]);
+  }, [tabs, refresh]);
 
+  // Determines which tab is active
   useEffect(() => {
     setActiveTab(tabs[tabs.length - 1]);
   }, [tabs]);
 
+  // Closes the tab
   const handleTabClose = (tab) => {
     setActiveTab(tabs[tabs.length - 1]);
     dispatch(removeTab(tab));
@@ -63,11 +66,7 @@ const Tabs = () => {
       </div>
 
       <div className='tabs__display'>
-        <TabDisplay
-          activeTab={activeTab}
-          reload={reload}
-          setReload={setReload}
-        />
+        <TabDisplay activeTab={activeTab} />
       </div>
     </div>
   );

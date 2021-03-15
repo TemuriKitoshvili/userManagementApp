@@ -6,6 +6,8 @@ import noty from '../configs/noty';
 // components
 import UserManagement from './UserManagement';
 import UserDelete from './UserDelete';
+// table headers
+import { columns } from './UserTableHeader';
 // material-ui
 import {
   makeStyles,
@@ -23,52 +25,6 @@ import { GrStatusGoodSmall } from 'react-icons/gr';
 import { FaUserEdit } from 'react-icons/fa';
 import { MdDeleteSweep } from 'react-icons/md';
 
-const columns = [
-  { id: 'id', label: 'იდენტიფიკატორი' },
-  { id: 'username', label: 'მომხმარებლის სახელი' },
-  {
-    id: 'fullName',
-    label: 'სახელი',
-    align: 'right',
-  },
-  {
-    id: 'email',
-    label: 'ელ. ფოსტა',
-    align: 'right',
-  },
-  {
-    id: 'userGroups',
-    label: 'ჯგუფები',
-    align: 'right',
-  },
-  {
-    id: 'createTime',
-    label: 'შექმნის თარიღი',
-    align: 'right',
-  },
-  {
-    id: 'lastUpdateTime',
-    label: 'განახლების დრო',
-    align: 'right',
-  },
-  {
-    id: 'active',
-    label: '',
-    align: 'right',
-  },
-  {
-    id: 'edit',
-    label: '',
-    align: 'right',
-  },
-  {
-    id: 'delete',
-    label: '',
-    minWidth: 70,
-    align: 'right',
-  },
-];
-
 const UsersPageTable = ({
   users,
   openEditModal,
@@ -77,10 +33,9 @@ const UsersPageTable = ({
   setOpenDeleteModal,
   saveOrEdit,
   setSaveOrEdit,
-  reload,
-  setReload,
 }) => {
   const classes = useStyles();
+  // table rows
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   // userManagement states
@@ -90,22 +45,18 @@ const UsersPageTable = ({
   const [userPassword, setUserPassword] = useState('');
   const [userConfirmPassword, setUserConfirmPassword] = useState('');
   const [userGroups, setUserGroups] = useState([]);
+  // user id for save/edit
   const [userId, setUserId] = useState('');
+  // user id for delete
   const [userIdForDelete, setUserIdForDelete] = useState('');
 
-  // console.log('userUsername', userUsername);
-  // console.log('userFullName', userFullName);
-  // console.log('userEmail', userEmail);
-  // console.log('userPassword', userPassword);
-  // console.log('userConfirmPassword', userConfirmPassword);
-  // console.log('userGroups', userGroups);
-
-  const handleUserEdit = (id) => {
+  // user edit handler: gets user information from server and saves specific user's id, creates action "edit"
+  const handleUserEditInfo = (id) => {
     setOpenEditModal(true);
     setSaveOrEdit('edit');
+
     if (id) {
       setUserId(id);
-
       axios
         .get(`users/${id}`)
         .then((res) => {
@@ -123,7 +74,8 @@ const UsersPageTable = ({
     }
   };
 
-  const handleUserDelete = (id) => {
+  // user delete handler: saves specific user's id
+  const handleUserDeleteInfo = (id) => {
     setOpenDeleteModal(true);
     if (id) {
       setUserIdForDelete(id);
@@ -159,17 +111,14 @@ const UsersPageTable = ({
                             {column?.id === 'username' && value}
                             {column?.id === 'fullName' && value}
                             {column?.id === 'email' && value}
-
                             {column?.id === 'userGroups' &&
                               value?.map((groupe, id) =>
                                 value?.length - 1 === id
                                   ? `${groupe?.name}. `
                                   : `${groupe?.name}, `
                               )}
-
                             {column?.id === 'createTime' &&
                               new Date(value).toLocaleString()}
-
                             {column?.id === 'lastUpdateTime' &&
                               new Date(value).toLocaleString()}
 
@@ -182,13 +131,13 @@ const UsersPageTable = ({
 
                             {column?.id === 'edit' && (
                               <FaUserEdit
-                                onClick={() => handleUserEdit(row.id)}
+                                onClick={() => handleUserEditInfo(row.id)}
                               />
                             )}
 
                             {column?.id === 'delete' && (
                               <MdDeleteSweep
-                                onClick={() => handleUserDelete(row.id)}
+                                onClick={() => handleUserDeleteInfo(row.id)}
                               />
                             )}
                           </TableCell>
@@ -232,18 +181,15 @@ const UsersPageTable = ({
         setUserConfirmPassword={setUserConfirmPassword}
         userGroups={userGroups}
         setUserGroups={setUserGroups}
+        // user and action info
         userId={userId}
         saveOrEdit={saveOrEdit}
-        reload={reload}
-        setReload={setReload}
       />
 
       <UserDelete
         openDeleteModal={openDeleteModal}
         setOpenDeleteModal={setOpenDeleteModal}
         userIdForDelete={userIdForDelete}
-        reload={reload}
-        setReload={setReload}
       />
     </div>
   );

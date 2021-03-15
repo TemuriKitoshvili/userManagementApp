@@ -1,10 +1,10 @@
 @import '../variables';
 @import '../mixins';
 
-.groupeEditModal {
+.groupEditModal {
   @include flex(center, center, row, nowrap);
 
-  .groupeEditModal__paper {
+  .groupEditModal__paper {
     width: 40%;
     height: 80%;
     background-color: blue;
@@ -12,7 +12,7 @@
     border-radius: 5px;
     @include flex(center, center, column, nowrap);
 
-    .groupeEditModal__title {
+    .groupEditModal__title {
       width: 100%;
       position: sticky;
       top: 0;
@@ -27,15 +27,15 @@
       }
     }
 
-    .groupeEditModal__info {
+    .groupEditModal__info {
       width: 100%;
       flex: 1;
       padding: 15px;
       border-radius: 5px 5px 0 0;
       background-color: white;
 
-      .groupeEditModal__info__groupeName,
-      .groupeEditModal__info__status {
+      .groupEditModal__info__groupName,
+      .groupEditModal__info__status {
         padding: 5px;
         margin-bottom: 5px;
         @include flex(flex-start, center);
@@ -60,7 +60,7 @@
         }
       }
 
-      .groupeEditModal__info__checkBox {
+      .groupEditModal__info__checkBox {
         padding: 0 5px 5px 5px;
         overflow-y: auto;
 
@@ -86,7 +86,7 @@
       }
     }
 
-    .groupeEditModal__buttons {
+    .groupEditModal__buttons {
       width: 100%;
       position: sticky;
       bottom: 0;

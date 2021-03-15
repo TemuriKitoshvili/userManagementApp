@@ -1,10 +1,10 @@
 @import '../variables';
 @import '../mixins';
 
-.userGroupeDelete {
+.userGroupDelete {
   @include flex(center, center, row, nowrap);
 
-  .userGroupeDelete__paper {
+  .userGroupDelete__paper {
     width: 40%;
     height: 30%;
     background-color: blue;
@@ -12,7 +12,7 @@
     border-radius: 5px;
     @include flex(center, center, column, nowrap);
 
-    .userGroupeDelete__title {
+    .userGroupDelete__title {
       width: 100%;
       position: sticky;
       top: 0;
@@ -27,7 +27,7 @@
       }
     }
 
-    .userGroupeDelete__info {
+    .userGroupDelete__info {
       width: 100%;
       flex: 1;
       padding: 10px 5px;
@@ -47,7 +47,7 @@
       }
     }
 
-    .userGroupeDelete__buttons {
+    .userGroupDelete__buttons {
       width: 100%;
       position: sticky;
       bottom: 0;

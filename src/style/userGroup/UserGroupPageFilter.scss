@@ -1,16 +1,16 @@
 @import '../variables';
 @import '../mixins';
 
-.userGroupePageFilter {
+.userGroupPageFilter {
   width: 100%;
   @include flex($align: center, $wrap: wrap);
 
   div {
     margin-right: 3px;
 
-    &.userGroupePageFilter__name,
-    &.userGroupePageFilter__permission,
-    &.userGroupePageFilter__status {
+    &.userGroupPageFilter__name,
+    &.userGroupPageFilter__permission,
+    &.userGroupPageFilter__status {
       width: 160px !important;
 
       div {

@@ -21,7 +21,7 @@ const UsersPageFilter = ({
   setSaveOrEdit,
 }) => {
   const users = useSelector((state) => state.APIData.users);
-  // filterValues
+  // filter states
   const [username, setUsername] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
@@ -32,6 +32,7 @@ const UsersPageFilter = ({
     handleFilterUsersData();
   }, [username, fullName, email, group, active, users]);
 
+  // Filters information with "or" condition
   const handleFilterUsersData = () => {
     if (!username && !fullName && !email && !group && !active) {
       return setFilterUsersData(users);
@@ -52,11 +53,13 @@ const UsersPageFilter = ({
     );
   };
 
+  // saves specific user's id and creates action "save"
   const handleAddUser = () => {
     setSaveOrEdit('save');
     setOpenEditModal(true);
   };
 
+  // cleans the states
   const handleCleaning = () => {
     setUsername('');
     setFullName('');

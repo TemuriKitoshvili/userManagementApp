@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import CheckboxTree from 'react-checkbox-tree';
-import '../../style/userGroupe/UserGroupeManagement.scss';
+import '../../style/userGroup/UserGroupManagement.scss';
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
+// store
+import { useDispatch, useSelector } from 'react-redux';
+import { refreshTable } from '../redux/actions/actionCreators';
 // configs
 import axios from '../configs/axios';
 import noty from '../configs/noty';
@@ -25,7 +28,7 @@ import { BsCheck, BsCheckAll, BsFileEarmarkPlus } from 'react-icons/bs';
 import { FaFolder, FaFolderOpen } from 'react-icons/fa';
 import { MdCheckBoxOutlineBlank } from 'react-icons/md';
 
-const UserGroupeManagement = ({
+const UserGroupManagement = ({
   openEditModal,
   setOpenEditModal,
   permissions,
@@ -36,32 +39,59 @@ const UserGroupeManagement = ({
   permissionCodes,
   setPermissionCodes,
   userGroupId,
-  reload,
-  setReload,
   saveOrEdit,
 }) => {
+  const refresh = useSelector((state) => state.refresh);
+  const dispatch = useDispatch();
   const [checkedNodes, setCheckedNodes] = useState([]);
   const [expandedNodes, setExpandedNodes] = useState([]);
   const [nodes, setNodes] = useState([]);
 
+  // Receives information from about permissions and saves it for the checkbox
   useEffect(() => {
     setCheckedNodes(permissionCodes);
   }, [permissionCodes]);
 
+  // Takes information from rights and groups it into groups
   useEffect(() => {
-    if (permissions) {
-      setNodes(
-        permissions?.map((permission) => ({
-          value: permission.code,
-          label: permission.code,
-        }))
-      );
-    }
+    const groupNames = [];
+    permissions?.map(
+      (permission) =>
+        !groupNames.includes(permission.groupName) &&
+        groupNames.push(permission.groupName)
+    );
+
+    setNodes(
+      groupNames?.map((groupName) => {
+        let node = {
+          value: groupName,
+          label: groupName,
+          children: [],
+        };
+
+        let permissionsForChildren = permissions.filter(
+          (permission) => groupName === permission.groupName
+        );
+
+        permissionsForChildren.map(
+          (child) =>
+            (node.children = [
+              ...node.children,
+              {
+                value: child.code,
+                label: child.name,
+              },
+            ])
+        );
+
+        return node;
+      })
+    );
   }, [permissions]);
 
-  const handleUserGroupUpdate = (e) => {
+  // Receives information about the action and the user group, makes the corresponding request of the action
+  const handleUserGroupSaveOrUpdate = (e) => {
     e.preventDefault();
-    console.log('submit');
     const userGroup = {
       name: name,
       active: status,
@@ -72,14 +102,16 @@ const UserGroupeManagement = ({
       axios
         .put(`userGroups/${userGroupId}`, userGroup)
         .then((res) => {
+          dispatch(refreshTable(!refresh));
           setOpenEditModal(false);
           setName('');
           setStatus('');
           setPermissionCodes([]);
-          setReload(!reload);
           noty('მომხმარებელის ჯგუფის ინფორმაცია წარმატებით განახლდა', 'info');
         })
-        .catch((err) => noty(err.message, 'error'));
+        .catch((err) =>
+          noty('მომხმარებელის ჯგუფის ინფორმაცია ვერ განახლდა', 'error')
+        );
     }
 
     if (saveOrEdit === 'save') {
@@ -90,13 +122,16 @@ const UserGroupeManagement = ({
           setName('');
           setStatus('');
           setPermissionCodes([]);
-          setReload(!reload);
+          dispatch(refreshTable(!refresh));
           noty('მომხმარებელის ჯგუფი წარმატებით დაემატა', 'info');
         })
-        .catch((err) => noty(err.message, 'error'));
+        .catch((err) =>
+          noty('მომხმარებელის ჯგუფის დამატებისას დაფიქსირდა შეცდომა', 'error')
+        );
     }
   };
 
+  // closes modals and cleaning the states
   const handleModalClose = () => {
     setOpenEditModal(false);
     setName('');
@@ -105,11 +140,11 @@ const UserGroupeManagement = ({
   };
 
   return (
-    <div className='userGroupeManagement'>
+    <div className='userGroupManagement'>
       <Modal
         aria-labelledby='transition-modal-title'
         aria-describedby='transition-modal-description'
-        className='groupeEditModal'
+        className='groupEditModal'
         open={openEditModal}
         onClose={handleModalClose}
         closeAfterTransition
@@ -120,15 +155,15 @@ const UserGroupeManagement = ({
       >
         <Fade in={openEditModal}>
           <form
-            className='groupeEditModal__paper'
-            onSubmit={(e) => handleUserGroupUpdate(e)}
+            className='groupEditModal__paper'
+            onSubmit={(e) => handleUserGroupSaveOrUpdate(e)}
           >
-            <div className='groupeEditModal__title'>
+            <div className='groupEditModal__title'>
               <h4>მომხმარებლის ჯგუფის მართვა</h4>
             </div>
 
-            <div className='groupeEditModal__info'>
-              <div className='groupeEditModal__info__groupeName'>
+            <div className='groupEditModal__info'>
+              <div className='groupEditModal__info__groupName'>
                 <h4>სახელი</h4>
                 <TextField
                   label='სახელი'
@@ -138,7 +173,7 @@ const UserGroupeManagement = ({
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
-              <div className='groupeEditModal__info__status'>
+              <div className='groupEditModal__info__status'>
                 <h4>სტატუსი</h4>
                 <FormControl variant='outlined'>
                   <InputLabel id='demo-simple-select-outlined-label'>
@@ -161,7 +196,7 @@ const UserGroupeManagement = ({
                   </Select>
                 </FormControl>
               </div>
-              <div className='groupeEditModal__info__checkBox'>
+              <div className='groupEditModal__info__checkBox'>
                 <h4>უფლებები</h4>
                 <CheckboxTree
                   nodes={nodes}
@@ -172,24 +207,20 @@ const UserGroupeManagement = ({
                   icons={{
                     check: <BsCheckAll />,
                     uncheck: <MdCheckBoxOutlineBlank />,
-                    halfCheck: <BsCheck style={{ display: 'none' }} />,
-                    expandClose: (
-                      <IoIosArrowForward style={{ display: 'none' }} />
-                    ),
-                    expandOpen: <IoIosArrowDown style={{ display: 'none' }} />,
-                    expandAll: <IoIosArrowDown style={{ display: 'none' }} />,
-                    collapseAll: (
-                      <IoIosArrowForward style={{ display: 'none' }} />
-                    ),
+                    halfCheck: <BsCheck />,
+                    expandClose: <IoIosArrowForward />,
+                    expandOpen: <IoIosArrowDown />,
+                    expandAll: <IoIosArrowDown />,
+                    collapseAll: <IoIosArrowForward />,
                     parentClose: <FaFolder />,
                     parentOpen: <FaFolderOpen />,
-                    leaf: <BsFileEarmarkPlus style={{ display: 'none' }} />,
+                    leaf: <BsFileEarmarkPlus />,
                   }}
                 />
               </div>
             </div>
 
-            <div className='groupeEditModal__buttons'>
+            <div className='groupEditModal__buttons'>
               <Button type='submit' variant='contained'>
                 <BiSave /> შენახვა
               </Button>
@@ -204,4 +235,4 @@ const UserGroupeManagement = ({
   );
 };
 
-export default UserGroupeManagement;
+export default UserGroupManagement;

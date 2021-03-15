@@ -1,11 +1,13 @@
 import { useState } from 'react';
-import '../../style/userGroupe/UserGroupeTable.scss';
+import '../../style/userGroup/UserGroupTable.scss';
 // configs
 import axios from '../configs/axios';
 import noty from '../configs/noty';
 // components
-import UserGroupeManagement from './UserGroupeManagement';
-import UserGroupeDelete from './UserGroupeDelete';
+import UserGroupManagement from './UserGroupManagement';
+import UserGroupDelete from './UserGroupDelete';
+// table header
+import { columns } from './UserGroupTableHeader';
 // material-ui
 import {
   makeStyles,
@@ -22,62 +24,28 @@ import { GrStatusGoodSmall } from 'react-icons/gr';
 import { FaUserEdit } from 'react-icons/fa';
 import { MdDeleteSweep } from 'react-icons/md';
 
-const columns = [
-  { id: 'id', label: 'იდენტიფიკატორი' },
-  { id: 'name', label: 'ჯგუფის სახელი' },
-  {
-    id: 'userPermissionCodes',
-    label: 'უფლებები',
-    align: 'right',
-  },
-  {
-    id: 'createTime',
-    label: 'შექმნის თარიღი',
-    align: 'right',
-  },
-  {
-    id: 'lastUpdateTime',
-    label: 'განახლების დრო',
-    align: 'right',
-  },
-  {
-    id: 'active',
-    label: '',
-    align: 'right',
-  },
-  {
-    id: 'edit',
-    label: '',
-    align: 'right',
-  },
-  {
-    id: 'delete',
-    label: '',
-    minWidth: 70,
-    align: 'right',
-  },
-];
-
-const UserGroupeTable = ({
+const UserGroupTable = ({
   userGroups,
   permissions,
   openEditModal,
   setOpenEditModal,
-  openGroupeDeleteModal,
-  setOpenGroupeDeleteModal,
-  reload,
-  setReload,
+  openGroupDeleteModal,
+  setOpenGroupDeleteModal,
   saveOrEdit,
   setSaveOrEdit,
 }) => {
   const classes = useStyles();
   const [name, setName] = useState('');
+  // userGroupManagement states
   const [status, setStatus] = useState('');
   const [permissionCodes, setPermissionCodes] = useState([]);
+  // id for save or edit
   const [userGroupId, setUserGroupId] = useState(null);
+  // id for delete
   const [userGroupIdForDelete, setUserGroupIdForDelete] = useState(null);
 
-  const handleUserGroupEdit = (id) => {
+  // user group edit handler: gets user group information from server and saves specific user groups's id, creates action "edit"
+  const handleUserGroupEditInfo = (id) => {
     setOpenEditModal(true);
     setSaveOrEdit('edit');
 
@@ -99,15 +67,16 @@ const UserGroupeTable = ({
     }
   };
 
-  const handleUserGroupDelete = (id) => {
-    setOpenGroupeDeleteModal(true);
+  // user group delete handler: saves specific user groups's id
+  const handleUserGroupDeleteInfo = (id) => {
+    setOpenGroupDeleteModal(true);
     if (id) {
       setUserGroupIdForDelete(id);
     }
   };
 
   return (
-    <div className='UserGroupeTable'>
+    <div className='UserGroupTable'>
       <Paper className={classes.root}>
         <TableContainer className={classes.container}>
           <Table stickyHeader aria-label='sticky table'>
@@ -131,7 +100,6 @@ const UserGroupeTable = ({
                         <TableCell key={column.id} align={column.align}>
                           {column?.id === 'id' && value}
                           {column?.id === 'name' && value}
-
                           {column.id === 'userPermissionCodes' &&
                             value?.map((permission, id) =>
                               value?.length - 1 === id
@@ -154,13 +122,13 @@ const UserGroupeTable = ({
 
                           {column.id === 'edit' && (
                             <FaUserEdit
-                              onClick={() => handleUserGroupEdit(row.id)}
+                              onClick={() => handleUserGroupEditInfo(row.id)}
                             />
                           )}
 
                           {column.id === 'delete' && (
                             <MdDeleteSweep
-                              onClick={() => handleUserGroupDelete(row.id)}
+                              onClick={() => handleUserGroupDeleteInfo(row.id)}
                             />
                           )}
                         </TableCell>
@@ -175,7 +143,7 @@ const UserGroupeTable = ({
       </Paper>
 
       {/* modals */}
-      <UserGroupeManagement
+      <UserGroupManagement
         openEditModal={openEditModal}
         setOpenEditModal={setOpenEditModal}
         permissions={permissions}
@@ -186,17 +154,13 @@ const UserGroupeTable = ({
         permissionCodes={permissionCodes}
         setPermissionCodes={setPermissionCodes}
         userGroupId={userGroupId}
-        reload={reload}
-        setReload={setReload}
         saveOrEdit={saveOrEdit}
       />
 
-      <UserGroupeDelete
-        openGroupeDeleteModal={openGroupeDeleteModal}
-        setOpenGroupeDeleteModal={setOpenGroupeDeleteModal}
+      <UserGroupDelete
+        openGroupDeleteModal={openGroupDeleteModal}
+        setOpenGroupDeleteModal={setOpenGroupDeleteModal}
         userGroupIdForDelete={userGroupIdForDelete}
-        reload={reload}
-        setReload={setReload}
       />
     </div>
   );
@@ -211,4 +175,4 @@ const useStyles = makeStyles({
   },
 });
 
-export default UserGroupeTable;
+export default UserGroupTable;

@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
-import '../../style/userGroupe/UserGroupPage.scss';
+import '../../style/userGroup/UserGroupPage.scss';
 // configs
 import axios from '../configs/axios';
 import noty from '../configs/noty';
 // components
-import UserGroupePageFilter from './UserGroupePageFilter';
-import UserGroupeTable from './UserGroupeTable';
+import UserGroupPageFilter from './UserGroupPageFilter';
+import UserGroupTable from './UserGroupTable';
 
-const UserGroupPage = ({ reload, setReload }) => {
+const UserGroupPage = () => {
   // filter
   const [permissions, setPermissions] = useState([]);
   const [filterUserGroupData, setFilterUserGroupData] = useState([]);
   const [saveOrEdit, setSaveOrEdit] = useState(null);
   // modals
   const [openEditModal, setOpenEditModal] = useState(false);
-  const [openGroupeDeleteModal, setOpenGroupeDeleteModal] = useState(false);
+  const [openGroupDeleteModal, setOpenGroupDeleteModal] = useState(false);
 
+  // Receives information about group rights
   useEffect(() => {
     axios
       .get('permissions')
@@ -30,7 +31,7 @@ const UserGroupPage = ({ reload, setReload }) => {
 
   return (
     <div className='userGroupPage'>
-      <UserGroupePageFilter
+      <UserGroupPageFilter
         permissions={permissions}
         setOpenEditModal={setOpenEditModal}
         setFilterUserGroupData={setFilterUserGroupData}
@@ -38,15 +39,13 @@ const UserGroupPage = ({ reload, setReload }) => {
       />
 
       <div className='userGroupPage__info'>
-        <UserGroupeTable
+        <UserGroupTable
           userGroups={filterUserGroupData}
           permissions={permissions}
           openEditModal={openEditModal}
           setOpenEditModal={setOpenEditModal}
-          openGroupeDeleteModal={openGroupeDeleteModal}
-          setOpenGroupeDeleteModal={setOpenGroupeDeleteModal}
-          reload={reload}
-          setReload={setReload}
+          openGroupDeleteModal={openGroupDeleteModal}
+          setOpenGroupDeleteModal={setOpenGroupDeleteModal}
           saveOrEdit={saveOrEdit}
           setSaveOrEdit={setSaveOrEdit}
         />

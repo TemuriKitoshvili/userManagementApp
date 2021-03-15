@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import '../../style/userGroup/UserGroupPageFilter.scss';
+// store
 import { useSelector } from 'react-redux';
-import '../../style/userGroupe/UserGroupePageFilter.scss';
 // material-ui
 import {
   Button,
@@ -14,7 +15,7 @@ import {
 import { AiOutlinePlus } from 'react-icons/ai';
 import { BiEraser } from 'react-icons/bi';
 
-const UserGroupePageFilter = ({
+const UserGroupPageFilter = ({
   permissions,
   setOpenEditModal,
   setFilterUserGroupData,
@@ -30,6 +31,7 @@ const UserGroupePageFilter = ({
     handleFilterUserGroupData();
   }, [name, permission, active, userGroups]);
 
+  // Filters information with "or" condition
   const handleFilterUserGroupData = () => {
     if (!name && !permission && !active) {
       return setFilterUserGroupData(userGroups);
@@ -47,11 +49,13 @@ const UserGroupePageFilter = ({
     );
   };
 
+  // saves specific user group's id and creates action "save"
   const handleAddUserGroup = () => {
     setOpenEditModal(true);
     setSaveOrEdit('save');
   };
 
+  // cleans the states
   const handleCleaning = () => {
     setName('');
     setPermission('');
@@ -59,9 +63,9 @@ const UserGroupePageFilter = ({
   };
 
   return (
-    <div className='userGroupePageFilter'>
+    <div className='userGroupPageFilter'>
       <TextField
-        className='userGroupePageFilter__name'
+        className='userGroupPageFilter__name'
         label='სახელი'
         variant='outlined'
         value={name}
@@ -69,7 +73,7 @@ const UserGroupePageFilter = ({
       />
 
       <FormControl
-        className='userGroupePageFilter__permission'
+        className='userGroupPageFilter__permission'
         variant='outlined'
       >
         <InputLabel id='demo-simple-select-outlined-label'>უფლებები</InputLabel>
@@ -88,7 +92,7 @@ const UserGroupePageFilter = ({
         </Select>
       </FormControl>
 
-      <FormControl className='userGroupePageFilter__status' variant='outlined'>
+      <FormControl className='userGroupPageFilter__status' variant='outlined'>
         <InputLabel id='demo-simple-select-outlined-label'>სტატუსი</InputLabel>
         <Select
           labelId='demo-simple-select-outlined-label'
@@ -117,4 +121,4 @@ const UserGroupePageFilter = ({
   );
 };
 
-export default UserGroupePageFilter;
+export default UserGroupPageFilter;

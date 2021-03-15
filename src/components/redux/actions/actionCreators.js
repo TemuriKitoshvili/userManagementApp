@@ -35,3 +35,12 @@ export const addUserGroups = (userGroups) => {
     },
   };
 };
+
+export const refreshTable = (refresh) => {
+  return {
+    type: actions.refreshTable,
+    payload: {
+      refresh,
+    },
+  };
+};

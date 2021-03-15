@@ -7,7 +7,7 @@ import noty from '../configs/noty';
 import UsersPageFilter from './UsersPageFilter';
 import UsersPageTable from './UsersPageTable';
 
-const UsersPage = ({ reload, setReload }) => {
+const UsersPage = () => {
   // filter
   const [userGroupsForSelection, setUserGroupsForSelection] = useState([]);
   const [filterUsersData, setFilterUsersData] = useState(null);
@@ -16,6 +16,7 @@ const UsersPage = ({ reload, setReload }) => {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [saveOrEdit, setSaveOrEdit] = useState(null);
 
+  // Gets data about groups for selection
   useEffect(() => {
     axios
       .get('userGroups/forSelection')
@@ -46,8 +47,6 @@ const UsersPage = ({ reload, setReload }) => {
           setOpenDeleteModal={setOpenDeleteModal}
           saveOrEdit={saveOrEdit}
           setSaveOrEdit={setSaveOrEdit}
-          reload={reload}
-          setReload={setReload}
         />
       </div>
     </div>
