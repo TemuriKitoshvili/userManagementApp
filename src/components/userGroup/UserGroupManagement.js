@@ -109,9 +109,11 @@ const UserGroupManagement = ({
           setPermissionCodes([]);
           noty('მომხმარებელის ჯგუფის ინფორმაცია წარმატებით განახლდა', 'info');
         })
-        .catch((err) =>
-          noty('მომხმარებელის ჯგუფის ინფორმაცია ვერ განახლდა', 'error')
-        );
+        .catch((err) => {
+          err.response?.status === 400
+            ? noty(err.response?.data?.message, 'warning')
+            : noty('დაფიქსირდა შეცდომა', 'error');
+        });
     }
 
     if (saveOrEdit === 'save') {
@@ -126,7 +128,9 @@ const UserGroupManagement = ({
           noty('მომხმარებელის ჯგუფი წარმატებით დაემატა', 'info');
         })
         .catch((err) =>
-          noty('მომხმარებელის ჯგუფის დამატებისას დაფიქსირდა შეცდომა', 'error')
+          err.response?.status === 400
+            ? noty(err.response?.data?.message, 'warning')
+            : noty('დაფიქსირდა შეცდომა', 'error')
         );
     }
   };
