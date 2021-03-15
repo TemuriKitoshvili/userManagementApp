@@ -119,6 +119,7 @@ const UserManagement = ({
       axios
         .put(`users/${userId}`, user)
         .then((res) => {
+          dispatch(refreshTable(!refresh));
           setOpenEditModal(false);
           setUserUsername('');
           setUserFullName('');
@@ -126,7 +127,6 @@ const UserManagement = ({
           setUserConfirmPassword('');
           setUserEmail('');
           setUserGroups([]);
-          dispatch(refreshTable(!refresh));
           noty('მომხმარებელის ინფორმაცია წარმატებით განახლდა', 'info');
         })
         .catch((err) =>

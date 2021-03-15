@@ -120,11 +120,11 @@ const UserGroupManagement = ({
       axios
         .post('userGroups', userGroup)
         .then((res) => {
+          dispatch(refreshTable(!refresh));
           setOpenEditModal(false);
           setName('');
           setStatus('');
           setPermissionCodes([]);
-          dispatch(refreshTable(!refresh));
           noty('მომხმარებელის ჯგუფი წარმატებით დაემატა', 'info');
         })
         .catch((err) =>
